@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 
 public class Memory {
 
-    private static final String SHARED_PREFERENCES_NAME = "com.snatik.matches";
-    private static String highStartKey = "theme_%d_difficulty_%d";
-    private static String bestTimeKey = "themetime_%d_difficultytime_%d";
+    public static final String SHARED_PREFERENCES_NAME = "com.snatik.matches";
+    public static String highStartKey = "theme_%d_difficulty_%d";
+    public static String bestTimeKey = "themetime_%d_difficultytime_%d";
 
     public static void save(int theme, int difficulty, int stars) {
 
