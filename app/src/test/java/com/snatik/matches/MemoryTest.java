@@ -32,30 +32,48 @@ public class MemoryTest {
     }
 
     @Test
-    public void testGetHighStars() {
+    public void testSaveTime() {
         int theme = 1;
-        int difficulty = 1;
-        int expectedHighStars = 3;
+        int difficulty = 2;
+        int passedSecs = 30;
 
-        Mockito.when(mockSharedPreferences.getInt(String.format(Memory.highStartKey, theme, difficulty), 0))
-                .thenReturn(expectedHighStars);
+        // Mock the best time in SharedPreferences
+        Mockito.when(mockSharedPreferences.getInt(String.format(Memory.bestTimeKey, theme, difficulty), -1))
+                .thenReturn(40);
 
-        int highStars = Memory.getHighStars(theme, difficulty);
-        assertEquals(3, highStars);
+        Memory.saveTime(theme, difficulty, passedSecs);
+
+        // Verify that the SharedPreferences were updated with the new best time
+        Mockito.verify(mockEditor).putInt(String.format(Memory.bestTimeKey, theme, difficulty), passedSecs);
+        Mockito.verify(mockEditor).commit();
+
+        // Update the mocked value in SharedPreferences
+        Mockito.when(mockSharedPreferences.getInt(String.format(Memory.bestTimeKey, theme, difficulty), -1))
+                .thenReturn(passedSecs);
+
+        // Retrieve the best time again and use assert to check
+        int bestTime = Memory.getBestTime(theme, difficulty);
+        assertEquals(passedSecs, bestTime);
     }
+
+
 
     @Test
     public void testGetBestTime() {
         int theme = 1;
-        int difficulty = 2;
+        int difficulty = 1;
         int expectedBestTime = 25;
+        String key = String.format(Memory.bestTimeKey, theme, difficulty);
 
-        Mockito.when(mockSharedPreferences.getInt(String.format(Memory.bestTimeKey, theme, difficulty), -1))
-                .thenReturn(expectedBestTime);
+        // Mock SharedPreferences behavior
+        Mockito.when(mockSharedPreferences.getInt(key, -1)).thenReturn(expectedBestTime);
 
+        // Test getBestTime for the current combination of theme and difficulty
         int bestTime = Memory.getBestTime(theme, difficulty);
-        assertEquals(expectedBestTime, bestTime);
+        int expected = (theme >= 0 && difficulty >= 0) ? expectedBestTime : -1; // Expect -1 for negative inputs
+        assertEquals(expected, bestTime);
     }
+
 }
 
 
