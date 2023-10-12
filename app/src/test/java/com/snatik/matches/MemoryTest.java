@@ -32,6 +32,22 @@ public class MemoryTest {
     }
 
     @Test
+    public void testGetBestTime() {
+        int theme = 1;
+        int difficulty = 1;
+        int expectedBestTime = 25;
+        String key = String.format(Memory.bestTimeKey, theme, difficulty);
+
+        // Mock SharedPreferences behavior
+        Mockito.when(mockSharedPreferences.getInt(key, -1)).thenReturn(expectedBestTime);
+
+        // Test getBestTime for the current combination of theme and difficulty
+        int bestTime = Memory.getBestTime(theme, difficulty);
+        int expected = (theme >= 0 && difficulty >= 0) ? expectedBestTime : -1; // Expect -1 for negative inputs
+        assertEquals(expected, bestTime);
+    }
+
+    @Test
     public void testSaveTime() {
         int theme = 1;
         int difficulty = 2;
@@ -54,24 +70,6 @@ public class MemoryTest {
         // Retrieve the best time again and use assert to check
         int bestTime = Memory.getBestTime(theme, difficulty);
         assertEquals(passedSecs, bestTime);
-    }
-
-
-
-    @Test
-    public void testGetBestTime() {
-        int theme = 1;
-        int difficulty = 1;
-        int expectedBestTime = 25;
-        String key = String.format(Memory.bestTimeKey, theme, difficulty);
-
-        // Mock SharedPreferences behavior
-        Mockito.when(mockSharedPreferences.getInt(key, -1)).thenReturn(expectedBestTime);
-
-        // Test getBestTime for the current combination of theme and difficulty
-        int bestTime = Memory.getBestTime(theme, difficulty);
-        int expected = (theme >= 0 && difficulty >= 0) ? expectedBestTime : -1; // Expect -1 for negative inputs
-        assertEquals(expected, bestTime);
     }
 
 }
